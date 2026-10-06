@@ -67,7 +67,10 @@ export const GET = withAuth(async (_req: NextRequest, ctx: AuthContext) => {
         .limit(100)
     : [];
 
-  return NextResponse.json({ categories, branches: branchRows, incidents: incidentRows });
+  const response = NextResponse.json({ categories, branches: branchRows, incidents: incidentRows });
+  response.headers.set('Cache-Control', 'private, max-age=60, must-revalidate');
+  response.headers.set('Vary', 'Cookie');
+  return response;
 });
 
 export const POST = withAuth(async (req: NextRequest, ctx: AuthContext) => {

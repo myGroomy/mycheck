@@ -22,7 +22,10 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     : ctx.branchIds;
 
   if (branchIds.length === 0) {
-    return NextResponse.json({ branches: [], shifts: [] });
+    const response = NextResponse.json({ branches: [], shifts: [] });
+    response.headers.set('Cache-Control', 'private, max-age=30, must-revalidate');
+    response.headers.set('Vary', 'Cookie');
+    return response;
   }
 
   const branchRows = await db
@@ -78,7 +81,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     instanceByDefinition.set(inst.shiftDefinitionId, inst);
   }
 
-  return NextResponse.json(
+  const response = NextResponse.json(
     {
       branches: branchRows,
       shifts: definitions.map((def) => {
@@ -99,11 +102,9 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
         };
       }),
       server_time: now.toISOString(),
-    },
-    {
-      headers: {
-        'Cache-Control': 'public, max-age=30, s-maxage=60',
-      },
     }
   );
+  response.headers.set('Cache-Control', 'private, max-age=30, must-revalidate');
+  response.headers.set('Vary', 'Cookie');
+  return response;
 });

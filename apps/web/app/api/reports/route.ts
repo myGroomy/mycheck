@@ -34,11 +34,14 @@ export const GET = withAuth(async (_req, ctx: AuthContext) => {
     .orderBy(desc(shiftInstances.shiftDate), desc(reports.generatedAt))
     .limit(100);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     reports: rows.map((row) => ({
       ...row,
       shiftDate: row.shiftDate,
       generatedAt: row.generatedAt.toISOString(),
     })),
   });
+  response.headers.set('Cache-Control', 'private, max-age=60, must-revalidate');
+  response.headers.set('Vary', 'Cookie');
+  return response;
 });

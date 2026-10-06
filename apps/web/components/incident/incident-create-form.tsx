@@ -48,8 +48,8 @@ export function IncidentCreateForm() {
       setLoading(true);
       try {
         const [incidentResponse, shiftResponse] = await Promise.all([
-          fetch('/api/incidents', { next: { revalidate: 30 }, headers: { 'X-Requested-With': 'fetch' } }),
-          fetch('/api/shifts', { next: { revalidate: 30 }, headers: { 'X-Requested-With': 'fetch' } }),
+          fetch('/api/incidents', { headers: { 'X-Requested-With': 'fetch' } }),
+          fetch('/api/shifts', { headers: { 'X-Requested-With': 'fetch' } }),
         ]);
         const incidentData = (await incidentResponse.json()) as IncidentOptions & { error?: string };
         const shiftData = (await shiftResponse.json()) as ShiftResponse & { error?: string };

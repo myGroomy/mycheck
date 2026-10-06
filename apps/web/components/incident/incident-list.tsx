@@ -33,12 +33,12 @@ export function IncidentList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (forceRefresh = false) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch('/api/incidents', {
-        next: { revalidate: 30 },
+        cache: forceRefresh ? 'reload' : 'default',
         headers: { 'X-Requested-With': 'fetch' },
       });
       const result = (await response.json()) as {
@@ -69,7 +69,7 @@ export function IncidentList() {
           <p className="mt-1 text-sm text-ink-muted">Lihat laporan incident dan tindak lanjut cabang Anda.</p>
         </div>
         <div className="flex gap-2">
-          <Button type="button" variant="outline" onClick={() => void load()} disabled={loading} aria-label="Muat ulang incident">
+          <Button type="button" variant="outline" onClick={() => void load(true)} disabled={loading} aria-label="Muat ulang incident">
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </Button>
           <Button asChild><Link href="/incident/baru"><Plus className="mr-2 h-4 w-4" />Buat Incident</Link></Button>

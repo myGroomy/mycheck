@@ -68,7 +68,6 @@ export function ShiftDashboardClient({ userId, userName }: { userId: string; use
       setLoading(true);
       try {
         const res = await fetch('/api/shifts', {
-          next: { revalidate: 30 },
           headers: { 'X-Requested-With': 'fetch' },
         });
         if (!res.ok) {

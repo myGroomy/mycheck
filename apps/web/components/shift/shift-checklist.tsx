@@ -110,7 +110,6 @@ export function ShiftChecklistClient({
     setLoading(true);
     try {
       const res = await fetch(`/api/shifts/${shiftId}/progress`, {
-        next: { revalidate: 30 },
         headers: { 'X-Requested-With': 'fetch' },
       });
       if (!res.ok) {

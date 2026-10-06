@@ -148,7 +148,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     .where(eq(users.id, shift.pJUserId))
     .limit(1);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     report: {
       id: report.id,
       report_number: report.reportNumber,
@@ -184,4 +184,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     })),
     addenda: addendumRows,
   });
+  response.headers.set('Cache-Control', 'private, no-store');
+  response.headers.set('Vary', 'Cookie');
+  return response;
 });

@@ -180,5 +180,10 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
     })),
     handover_fields: snapshot.handover_fields,
     server_time: now.toISOString(),
+  }, {
+    headers: {
+      'Cache-Control': 'private, no-store',
+      Vary: 'Cookie',
+    },
   });
 });

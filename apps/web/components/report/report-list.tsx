@@ -30,7 +30,6 @@ export function ReportList() {
       setError(null);
       try {
         const response = await fetch('/api/reports', {
-          next: { revalidate: 30 },
           headers: { 'X-Requested-With': 'fetch' },
         });
         const result = (await response.json()) as { error?: string; reports?: ReportItem[] };

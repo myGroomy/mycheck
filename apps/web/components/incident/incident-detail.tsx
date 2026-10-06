@@ -35,12 +35,12 @@ export function IncidentDetail({ incidentId }: { incidentId: string }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (forceRefresh = false) => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(`/api/incidents/${incidentId}`, {
-        next: { revalidate: 30 },
+        cache: forceRefresh ? 'reload' : 'default',
         headers: { 'X-Requested-With': 'fetch' },
       });
       const result = (await response.json()) as IncidentDetailData & { error?: string };
@@ -69,7 +69,7 @@ export function IncidentDetail({ incidentId }: { incidentId: string }) {
       const result = (await response.json()) as { error?: string };
       if (!response.ok) throw new Error(result.error || 'Catatan gagal disimpan.');
       setNote('');
-      await load();
+      await load(true);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Catatan gagal disimpan.');
     } finally {

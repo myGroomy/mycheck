@@ -62,7 +62,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
       .where(and(eq(photos.ownerType, 'incident'), eq(photos.ownerId, incidentId))),
   ]);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     incident: {
       ...incident,
       occurredAt: incident.occurredAt.toISOString(),
@@ -74,4 +74,7 @@ export const GET = withAuth(async (req: NextRequest, ctx: AuthContext) => {
       uploadedAt: photo.uploadedAt?.toISOString() ?? null,
     })),
   });
+  response.headers.set('Cache-Control', 'private, max-age=30, must-revalidate');
+  response.headers.set('Vary', 'Cookie');
+  return response;
 });
