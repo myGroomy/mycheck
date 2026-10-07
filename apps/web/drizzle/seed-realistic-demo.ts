@@ -3,11 +3,11 @@
  * Run from the repository root with: npx tsx apps/web/drizzle/seed-realistic-demo.ts
  */
 import 'dotenv/config';
-import * as argon2 from 'argon2';
 import { and, eq, inArray, notInArray } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { ulid } from 'ulid';
+import { hashPin } from '../lib/auth/pin';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL;
@@ -97,7 +97,7 @@ const handoverSpecs = [
 ] as const;
 
 async function seed() {
-  const pinHash = await argon2.hash(`123456${pinPepper}`);
+  const pinHash = await hashPin('123456');
 
   const result = await db.transaction(async (tx) => {
     const now = new Date();

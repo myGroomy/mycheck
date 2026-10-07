@@ -1,4 +1,4 @@
-import argon2 from 'argon2';
+import { hash, verify } from '@node-rs/argon2';
 
 const getPepper = () => {
   const pepper = process.env.PIN_PEPPER;
@@ -8,14 +8,24 @@ const getPepper = () => {
   return pepper;
 };
 
+// Parameter hash harus eksplisit — jangan andalkan default library.
+// Nilai ini dicocokkan dengan hash yang sudah tersimpan (argon2 lama: m=65536, t=3, p=4).
+// Algorithm.Argon2id = 2, Version.V0x13 = 1 (pakai number literal karena isolatedModules).
+const HASH_OPTIONS = {
+  algorithm: 2,
+  memoryCost: 65536,
+  timeCost: 3,
+  parallelism: 4,
+  outputLen: 32,
+  version: 1,
+};
+
 /**
  * Hash PIN menggunakan Argon2id + PIN_PEPPER.
  */
 export async function hashPin(pin: string): Promise<string> {
   const pepper = getPepper();
-  return argon2.hash(pin + pepper, {
-    type: argon2.argon2id,
-  });
+  return hash(pin + pepper, HASH_OPTIONS);
 }
 
 /**
@@ -24,7 +34,7 @@ export async function hashPin(pin: string): Promise<string> {
 export async function verifyPin(pin: string, hash: string): Promise<boolean> {
   const pepper = getPepper();
   try {
-    return await argon2.verify(hash, pin + pepper);
+    return await verify(hash, pin + pepper);
   } catch {
     return false;
   }

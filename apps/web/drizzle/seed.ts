@@ -14,7 +14,7 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { ulid } from 'ulid';
-import * as argon2 from 'argon2';
+import { hashPin } from '../lib/auth/pin';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL;
@@ -29,7 +29,7 @@ async function seed() {
   console.log('🌱 Mulai seed...');
 
   // Hash PIN (default: 123456)
-  const pinHash = await argon2.hash('123456' + (process.env.PIN_PEPPER || ''));
+  const pinHash = await hashPin('123456');
 
   // 1. Cabang
   const branchId = ulid();
