@@ -18,7 +18,10 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Cek apakah path publik
-  const isPublic = pathname === '/' || PUBLIC_PATHS.some((path) => pathname.startsWith(path));
+  const isPublic =
+    pathname === '/' ||
+    pathname === '/docs' ||
+    PUBLIC_PATHS.some((path) => pathname.startsWith(path));
 
   // Jika mencoba akses path publik tanpa/dengan token
   if (isPublic) {

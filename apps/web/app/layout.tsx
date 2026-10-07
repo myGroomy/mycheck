@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { PwaStatus } from '@/components/pwa-status';
+import { GlobalDocsLink } from '@/components/global-docs-link';
 import './globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className={`${plusJakartaSans.variable} bg-canvas text-ink antialiased`}>
         <PwaStatus />
         {children}
+        <GlobalDocsLink />
         <Toaster position="top-center" richColors />
       </body>
     </html>
