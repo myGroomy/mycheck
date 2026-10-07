@@ -88,19 +88,34 @@ function LoginForm() {
         <label htmlFor="pin" className="block text-xs font-medium text-ink-muted mb-2">
           PIN (6 Digit) <span className="text-red-500">*</span>
         </label>
-        <input
-          id="pin"
-          type="password"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          maxLength={6}
-          value={pin}
-          onChange={(e) => setPin(e.currentTarget.value.replace(/\D/g, '').slice(0, 6))}
-          placeholder="Masukkan PIN 6 digit"
-          autoComplete="current-password"
-          className="w-full h-12 rounded-lg border border-border bg-canvas px-3 text-base tracking-widest text-ink focus:border-ink focus:outline-none"
-          required
-        />
+        <div className="relative w-full">
+          <div className="flex gap-2" aria-hidden="true">
+            {Array.from({ length: 6 }, (_, index) => (
+              <span
+                key={index}
+                className={`flex h-12 min-w-0 flex-1 items-center justify-center rounded-lg border bg-canvas text-xl font-semibold text-ink transition-colors ${
+                  index === Math.min(pin.length, 5)
+                    ? 'border-ink ring-1 ring-ink'
+                    : 'border-border'
+                }`}
+              >
+                {pin[index] ? '•' : ''}
+              </span>
+            ))}
+          </div>
+          <input
+            id="pin"
+            type="password"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={6}
+            value={pin}
+            onChange={(e) => setPin(e.currentTarget.value.replace(/\D/g, '').slice(0, 6))}
+            autoComplete="current-password"
+            className="absolute inset-0 z-10 h-full w-full cursor-text opacity-0"
+            required
+          />
+        </div>
       </div>
 
       <button

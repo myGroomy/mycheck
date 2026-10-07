@@ -19,18 +19,14 @@ export function middleware(req: NextRequest) {
 
   // Cek apakah path publik
   const isPublic = pathname === '/' || PUBLIC_PATHS.some((path) => pathname.startsWith(path));
-  const token = req.cookies.get('session_token')?.value;
 
   // Jika mencoba akses path publik tanpa/dengan token
   if (isPublic) {
-    // Jika di /login tapi sudah punya token, arahkan ke home
-    if (pathname === '/login' && token) {
-      return NextResponse.redirect(new URL('/', req.url));
-    }
     return NextResponse.next();
   }
 
   // Path terproteksi: jika tidak ada token, redirect ke /login
+  const token = req.cookies.get('session_token')?.value;
   if (!token) {
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('from', pathname);

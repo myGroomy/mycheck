@@ -62,6 +62,7 @@ export function IncidentList() {
 
   return (
     <main className="mx-auto max-w-4xl space-y-5 p-4 pb-24 md:p-6">
+      <PetugasNav />
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted">Operasional</p>
@@ -118,7 +119,6 @@ export function IncidentList() {
           ))}
         </div>
       )}
-      <PetugasNav />
     </main>
   );
 }
